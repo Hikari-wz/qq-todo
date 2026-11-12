@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QQ 待办</title>
+<meta name="theme-color" content="#173e35">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="QQ 待办">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/todo-icon-180.png">
+<style>
+:root{color-scheme:light;font:16px/1.5 "DM Sans","Microsoft YaHei",sans-serif;color:#172d29;background:#eef3ed}
+*{box-sizing:border-box}body{margin:0}main{max-width:680px;margin:auto;padding:clamp(16px,5vw,36px)}
+header{background:#173e35;color:#fff;padding:22px;border-radius:18px}h1{margin:0;font-size:1.9rem}
+nav{display:flex;gap:8px;margin:16px 0}button{font:inherit;font-weight:600;cursor:pointer;min-height:44px;padding:8px 13px;border-radius:10px;border:1px solid #bdccc2;color:#173e35;background:#fff}
+nav button{flex:1}button[aria-pressed=true]{background:#173e35;color:#fff}
+article{background:#fff;border:1px solid #d4dfd6;border-radius:14px;margin:12px 0;padding:16px;overflow-wrap:anywhere}
+h2{font-size:1.12rem;margin:0 0 8px}p{margin:8px 0}dl{margin:8px 0}dl div{display:grid;grid-template-columns:3.4em 1fr;gap:6px}dt{color:#49635a}dd{margin:0}
+summary{padding:0 0 8px;cursor:pointer;color:#215948}summary strong{font-size:1.12rem}summary small{display:block;margin-top:4px}details[open]{margin-bottom:12px}blockquote{margin:4px 0 12px;padding-left:10px;border-left:3px solid #a5c0b1;white-space:pre-wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}small{color:#49635a}
+</style>
+<main>
+<header><h1>QQ 待办</h1></header>
+<nav aria-label="待办分类"><button data-view="todo" aria-pressed="true">待做</button><button data-view="review" aria-pressed="false">待确认</button><button data-view="handled" aria-pressed="false">已处理</button></nav>
+<p id="history-note" role="status"></p>
+<p id="status" role="status"></p>
+<section id="cards" aria-label="卡片"></section>
+</main>
+<script>
+const list = document.querySelector('#cards');
+const status = document.querySelector('#status');
+const filters = [...document.querySelectorAll('[data-view]')];
+let view = 'todo', cards = [], snapshot = '';
+const expanded = new Set();
+const handled = card => ['done','dismissed'].includes(card.manual_status);
+const decision = card => card.manual_status === 'open' ? 'todo' : card.decision;
+const time = value => value ? value.replace('T',' ') : '';
+function element(parent, tag, text) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  parent.append(node);
+  return node;
+}
+function render() {
+  list.replaceChildren();
+  for (const filter of filters) filter.setAttribute('aria-pressed', filter.dataset.view === view);
+  const shown = cards.filter(card => view === 'handled' ? handled(card) :
+    !handled(card) && (view === 'review' ? ['review','image'].includes(decision(card)) : decision(card) === view));
+  if (!shown.length) element(list, 'p', '这里暂无卡片。');
+  for (const card of shown) {
+    const article = element(list,'article');
+    const groups = [...new Set(card.evidence.map(source => source.group).filter(Boolean))];
+    const details = element(article, 'details');
+    details.open = expanded.has(card.id);
+    details.ontoggle = () => {
+      if (details.open) expanded.add(card.id);
+      else expanded.delete(card.id);
+    };
+    const summary = element(details, 'summary');
+    element(summary, 'strong', card.title);
+    element(summary, 'small', '来源：' + (groups.join('、') || '来源未知'));
+    article.onclick = event => {
+      if (!event.target.closest('button, details') && !window.getSelection()?.toString()) {
+        details.open = !details.open;
+      }
+    };
+    for (const source of card.evidence) {
+      element(details, 'small', [source.group, time(source.at)].filter(Boolean).join(' · '));
+      const original = element(details, 'blockquote', source.text || source.quote || '原话未保存');
+      if (!source.text && !source.quote) continue;
+      element(details, 'button', '复制原话').onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(original.textContent);
+          status.textContent = '已复制原话';
+        } catch {
+          const range = document.createRange();
+          range.selectNodeContents(original);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          status.textContent = document.execCommand('copy') ? '已复制原话' : '原话已选中，请手动复制';
+        }
+      };
+    }
+    if (!card.evidence.length) element(details, 'p', '原话未保存');
+    if (handled(card)) element(article,'small',card.manual_status === 'done' ? '已完成' : '已忽略');
+    if (card.message_at) element(article,'small','消息时间：' + time(card.message_at));
+    if (card.action) element(article,'p',card.action);
+    if (card.condition) element(article,'p',card.condition);
+    if (card.notes) element(article,'p',card.notes);
+    const times = element(article,'dl');
+    for (const [label,value] of [
+      ['截止',time(card.times.deadline)], ['到场',time(card.times.arrival)],
+      ['会期',[time(card.times.start),time(card.times.end)].filter(Boolean).join(' – ')]
+    ]) {
+      if (!value) continue;
+      const row = element(times,'div');
+      element(row,'dt',label);
+      element(row,'dd',value);
+    }
+    const actions = element(article,'div');
+    actions.className = 'actions';
+    let choices = [['标为已完成','done'],['忽略','dismissed']];
+    if (handled(card)) choices = [['恢复','clear']];
+    else if (['review','image'].includes(decision(card))) choices = [['放入待办','open'],['忽略','dismissed']];
+    for (const [label,value] of choices) {
+      element(actions,'button',label).onclick = async event => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        try {
+          const result = await fetch('/api/status',{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({id:card.id,status:value})});
+          if (!result.ok) throw new Error((await result.json()).error);
+          await load();
+          status.textContent = '已保存';
+        } catch (error) { status.textContent = error.message; }
+        finally { button.disabled = false; }
+      };
+    }
+  }
+}
+async function load() {
+  const response = await fetch('/api/cards', {signal: AbortSignal.timeout(8000)});
+  if (!response.ok) throw new Error('无法读取待办。');
+  const next = await response.text();
+  if (next !== snapshot) {
+    cards = JSON.parse(next);
+    snapshot = next;
+    render();
+  }
+  const note = await fetch('/api/health-note', {signal: AbortSignal.timeout(8000)});
+  if (note.ok) document.querySelector('#history-note').textContent = (await note.json()).warning;
+}
+for (const filter of filters) filter.onclick = () => { view = filter.dataset.view; render(); };
+let reconnecting = false;
+async function refresh() {
+  try {
+    await load();
+    if (reconnecting) status.textContent = '连接已恢复';
+    reconnecting = false;
+  } catch (error) {
+    reconnecting = true;
+    status.textContent = '连接暂时中断，正在自动重试…';
+  } finally {
+    setTimeout(refresh, 15000);
+  }
+}
+refresh();
+</script>
+</html>

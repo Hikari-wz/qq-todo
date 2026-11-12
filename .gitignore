@@ -1,0 +1,12 @@
+/work/
+/.venv/
+__pycache__/
+*.py[cod]
+*.dpapi
+*.log
+*.jsonl
+*.pid
+*.error.json
+.env
+.env.*
+/outputs/personal-profile.json

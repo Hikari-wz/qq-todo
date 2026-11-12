@@ -1,0 +1,47 @@
+{
+  "revision": 1,
+  "cards": [
+    {
+      "id": "demo-meeting",
+      "title": "新生见面会",
+      "action": "到场并签到",
+      "notes": "",
+      "condition": "",
+      "decision": "todo",
+      "times": {
+        "deadline": null,
+        "arrival": "2026-11-11T12:15",
+        "start": "2026-11-11T12:30",
+        "end": "2026-11-11T13:30"
+      }
+    },
+    {
+      "id": "demo-evaluation",
+      "title": "期中评教",
+      "action": "完成期中评教",
+      "notes": "",
+      "condition": "未完成才做",
+      "decision": "todo",
+      "times": {
+        "deadline": "2026-11-13",
+        "arrival": null,
+        "start": null,
+        "end": null
+      }
+    },
+    {
+      "id": "demo-form",
+      "title": "宣讲意向表",
+      "action": "考虑填写意向表",
+      "notes": "",
+      "condition": "",
+      "decision": "review",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      }
+    }
+  ]
+}

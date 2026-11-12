@@ -1,0 +1,178 @@
+[
+  [
+    {
+      "title": "新生见面会",
+      "decision": "todo",
+      "action": "到沁湖礼堂参加见面会并扫码签到",
+      "notes": "必须扫码签到",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": "2026-11-11T12:15",
+        "start": "2026-11-11T12:30",
+        "end": "2026-11-11T13:30"
+      },
+      "quote": "全体新生：11月11日12:15前到沁湖礼堂，见面会12:30–13:30，必须扫码签到。"
+    }
+  ],
+  [
+    {
+      "title": "期中评教",
+      "decision": "todo",
+      "action": "完成期中评教",
+      "notes": "",
+      "condition": "未完成才做",
+      "times": {
+        "deadline": "2026-11-13",
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "全体新生请完成期中评教，已完成不用再做，11月13日截止。"
+    }
+  ],
+  [
+    {
+      "title": "期中评教",
+      "decision": "todo",
+      "action": "完成期中评教",
+      "notes": "",
+      "condition": "未完成才做",
+      "times": {
+        "deadline": "2026-11-13",
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "link": "m2:1",
+      "quote": "三班同学：期中评教11月13日截止，已完成无需重复提交。"
+    }
+  ],
+  [
+    {
+      "title": "英语小组",
+      "decision": "todo",
+      "action": "提交小组名单",
+      "notes": "",
+      "condition": "",
+      "times": {
+        "deadline": "2026-11-10T13:00",
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "每位同学今天13:00前提交英语小组名单。"
+    }
+  ],
+  [
+    {
+      "title": "科创实验班",
+      "decision": "review",
+      "action": "确认是否报名",
+      "notes": "自愿",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "欢迎自愿报名科创实验班，面向新生。蓝桥杯电子赛也开放自愿报名。"
+    },
+    {
+      "title": "蓝桥杯电子赛",
+      "decision": "review",
+      "action": "确认是否参赛",
+      "notes": "自愿",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "欢迎自愿报名科创实验班，面向新生。蓝桥杯电子赛也开放自愿报名。"
+    }
+  ],
+  [
+    {
+      "title": "科创实验班",
+      "decision": "review",
+      "action": "确认是否报名",
+      "notes": "可填宣讲意向表，非必填",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "link": "m5:1",
+      "quote": "科创实验班补充通知：有意向的同学可填写宣讲意向表，非必填。"
+    }
+  ],
+  [
+    {
+      "title": "商业品牌讲座",
+      "decision": "skip",
+      "action": "参加讲座",
+      "notes": "商业推广",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "推广：欢迎自愿参加商业品牌新品讲座，现场有优惠；另请二班同学补交实验报告。"
+    },
+    {
+      "title": "二班补交报告",
+      "decision": "skip",
+      "action": "补交报告",
+      "notes": "本人三班",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "推广：欢迎自愿参加商业品牌新品讲座，现场有优惠；另请二班同学补交实验报告。"
+    }
+  ],
+  [
+    {
+      "title": "图片公示",
+      "decision": "image",
+      "action": "",
+      "notes": "需要看图或 OCR",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "quote": "[图片]"
+    }
+  ],
+  [
+    {
+      "title": "英语小组",
+      "decision": "review",
+      "action": "核对完整分组名单",
+      "notes": "附件未提供，无法确认本人是否已在名单；原截止已过",
+      "condition": "",
+      "times": {
+        "deadline": null,
+        "arrival": null,
+        "start": null,
+        "end": null
+      },
+      "link": "m4:1",
+      "quote": "英语小组分组已公布：样例甲、样例乙在第一组；其他组见附件。已在分组名单上的同学不用再交。",
+      "kind": "roster"
+    }
+  ]
+]
