@@ -21,15 +21,15 @@ python -B .\outputs\todo_server.py --state .\work\demo.json
 
 ### 模式一 · 本地模型
 
-先启动兼容 OpenAI Chat Completions 的本地 llama.cpp 服务，例如加载 Qwen 模型并监听 127.0.0.1:9931。将以下群号和班级替换为自己的配置。访问令牌只在 PowerShell 中输入。
+先启动兼容 OpenAI Chat Completions 的本地 llama.cpp 服务，例如加载 Qwen 模型并监听 127.0.0.1:9931。访问令牌只在 PowerShell 中输入。以下命令处理当前账号加入的全部群。
 
 ```powershell
 $env:NAPCAT_ONEBOT_TOKEN = [pscredential]::new('onebot', (Read-Host 'OneBot token' -AsSecureString)).GetNetworkCredential().Password
 $env:TODO_EXTRACT_PROVIDER = 'local'
-python -B .\outputs\napcat_pilot.py --group 123456789 --class-name '示例班' --state .\work\live.json --model-port 9931
+python -B .\outputs\napcat_pilot.py --all-groups --state .\work\live.json --model-port 9931
 ```
 
-本地模式使用本机模型处理消息。若要纳入全部群，可改用 --all-groups，并使用独立状态文件。设置 TODO_MUTED_GROUPS 可排除逗号分隔的群号。自定义班级别名、年级和校区可复制 outputs/personal-profile.example.json 为 outputs/personal-profile.json，班级必须与启动参数一致。
+本地模式使用本机模型处理消息。设置 TODO_MUTED_GROUPS 可排除逗号分隔的群号。
 
 ### 模式二 · DeepSeek API
 
@@ -40,13 +40,13 @@ $env:NAPCAT_ONEBOT_TOKEN = [pscredential]::new('onebot', (Read-Host 'OneBot toke
 $env:TODO_EXTRACT_PROVIDER = 'deepseek'
 $env:DEEPSEEK_API_KEY = [pscredential]::new('deepseek', (Read-Host 'DeepSeek API Key' -AsSecureString)).GetNetworkCredential().Password
 try {
-    python -B .\outputs\napcat_pilot.py --all-groups --class-name '示例班' --state .\work\live-cloud.json
+    python -B .\outputs\napcat_pilot.py --all-groups --state .\work\live-cloud.json
 } finally {
     Remove-Item Env:DEEPSEEK_API_KEY -ErrorAction SilentlyContinue
 }
 ```
 
-正式运行用量写到 work/deepseek-live-usage.jsonl。停止时按 Ctrl+C。再次启动时使用同一模式、群范围、班级和状态路径。两种模式可以复用同一份已启用全部群的状态，切换前先停止旧接收器。
+正式运行用量写到 work/deepseek-live-usage.jsonl。停止时按 Ctrl+C。再次启动时使用同一模式、群范围和状态路径。两种模式可以复用同一份已启用全部群的状态，切换前先停止旧接收器。
 
 ### 手机访问
 
